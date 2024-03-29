@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, } from 'chart.js';
-const { getTeams, getTries } = require('./services/apiService');
+import axios from 'axios';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -17,19 +17,26 @@ export const options = {
     },
   },
 };
-const dataObject = getTries();
-const labels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet'];
-// const api_data = {getTries}
-// console.log(api_data)
+const fetchData = async () => {
+  try {
+    return await axios.get('./services/tries.json');
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+  }
+};
+
+const triesData = fetchData().data;
+const labels = Object.keys(triesData);
+const try_data = Object.values(triesData).map(obj => obj.Try);
+
 export const data = {
   labels,
   datasets: [
     {
-      label: 'Ventes',
-      data: labels.map(() => Math.floor(Math.random() * 1000)),
+      label: 'Tries',
+      data: labels.map(() => try_data.pop()),
       backgroundColor: 'rgba(255, 99, 132, 0.5)',
     },
-    // Vous pouvez ajouter plus de séries ici
   ],
 };
 

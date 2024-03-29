@@ -1,5 +1,5 @@
 const axios = require('axios'); // legacy way
-
+const fs = require('fs');
 
 // Want to use async/await? Add the `async` keyword to your outer function/method.
 async function getIndexes() {
@@ -32,12 +32,18 @@ try {
 async function getTries() {
 try {
     const response = await axios.get('http://127.0.0.1:8000/api/teamstat/France/Try');
+    const responseData = response.data;
+
+      // Write the response data to a JSON file
+    fs.writeFileSync('tries.json', JSON.stringify(responseData, null, 2));
+
     console.log(response);
 } catch (error) {
     console.error(error);
 }
 }
-console.log (getTries())
 
-module.exports = { getTeams, getTries };
+data =getTries();
+
+module.exports = { data };
 
